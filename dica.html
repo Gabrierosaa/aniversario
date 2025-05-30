@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dica Secreta - Feliz Aniversário!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #457b9d;
+            --accent-color: #a8dadc;
+            --dark-color: #1d3557;
+            --light-color: #f1faee;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffc8dd, #ffafcc, #bde0fe, #a2d2ff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: var(--dark-color);
+            overflow: hidden;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 600px;
+            z-index: 10;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+            border: 3px solid var(--primary-color);
+            overflow: hidden;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateY(5deg); }
+            100% { transform: translateY(0px) rotateY(0deg); }
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                var(--primary-color), 
+                var(--secondary-color), 
+                var(--accent-color), 
+                var(--primary-color));
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientBorder 8s ease infinite;
+            border-radius: 25px;
+            opacity: 0.7;
+            filter: blur(15px);
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--primary-color);
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+        .dica-box {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            border: 2px dashed var(--secondary-color);
+            transform: perspective(500px) rotateX(5deg);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .dica-box:hover {
+            transform: perspective(500px) rotateX(5deg) scale(1.05);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .dica-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin: 0;
+            position: relative;
+        }
+
+        .dica-text::before, .dica-text::after {
+            content: "❝";
+            position: absolute;
+            font-size: 3rem;
+            color: var(--primary-color);
+            opacity: 0.3;
+        }
+
+        .dica-text::before {
+            top: -20px;
+            left: -15px;
+        }
+
+        .dica-text::after {
+            bottom: -40px;
+            right: -15px;
+            transform: rotate(180deg);
+        }
+
+        .resposta {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: rgba(168, 218, 220, 0.3);
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin: 1rem 0;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .hint {
+            font-style: italic;
+            color: var(--secondary-color);
+            margin-top: 1rem;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .floating-objects {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-object {
+            position: absolute;
+            opacity: 0.6;
+            animation: floatAround 15s infinite linear;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(90deg); }
+            50% { transform: translate(100px, 0) rotate(180deg); }
+            75% { transform: translate(50px, -50px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .btn-revelar {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-revelar:hover {
+            background-color: #d62839;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-revelar:active {
+            transform: translateY(1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .dica-text {
+                font-size: 1.2rem;
+            }
+            
+            .resposta {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-objects">
+        <div class="floating-object">🪞</div>
+        <div class="floating-object">🚿</div>
+        <div class="floating-object">🛁</div>
+        <div class="floating-object">🧴</div>
+    </div>
+    
+    <div class="container">
+        <div class="emoji">🔍</div>
+        <h1>Dica Secreta</h1>
+        
+        <div class="dica-box" id="dicaBox">
+            <p class="dica-text">"Fica atrás da onde você tenta quebrar todo dia"</p>
+        </div>
+        
+        <p class="hint">(Pense no que você faz de manhã...)</p>
+        
+        <button class="btn-revelar" id="btnRevelar">Revelar Resposta</button>
+        
+        <div class="emoji">🤔</div>
+        
+        <div class="resposta" id="resposta">
+            A resposta é: <span style="color: var(--secondary-color);">"Atrás do espelho do banheiro!"</span> 🎉
+        </div>
+    </div>
+    
+    <canvas id="confetti-canvas"></canvas>
+    
+    <script>
+        // Efeito de confete ao carregar a página
+        function fireConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+            });
+        }
+        
+        // Disparar confetes imediatamente
+        fireConfetti();
+        
+        // Efeito de digitação para a dica
+        document.addEventListener('DOMContentLoaded', function() {
+            const dicaText = document.querySelector('.dica-text');
+            const textoOriginal = dicaText.textContent;
+            dicaText.textContent = '';
+            
+            let i = 0;
+            const typingEffect = setInterval(function() {
+                if (i < textoOriginal.length) {
+                    dicaText.textContent += textoOriginal.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingEffect);
+                }
+            }, 100);
+        });
+        
+        // Revelar resposta quando o botão for clicado
+        document.getElementById('btnRevelar').addEventListener('click', function() {
+            const resposta = document.getElementById('resposta');
+            const btnRevelar = document.getElementById('btnRevelar');
+            
+            resposta.style.display = 'block';
+            btnRevelar.style.display = 'none';
+            
+            // Efeitos especiais ao revelar
+            fireConfetti();
+            
+            // Animação adicional
+            const dicaBox = document.getElementById('dicaBox');
+            dicaBox.style.transform = 'perspective(500px) rotateX(10deg)';
+            dicaBox.style.background = 'linear-gradient(135deg, #f1faee, #a8dadc)';
+            
+            // Mais confetes após 1 segundo
+            setTimeout(fireConfetti, 1000);
+            setTimeout(fireConfetti, 1500);
+        });
+    </script>
+</body>
+</html>
