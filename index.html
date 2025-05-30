@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Aniversário, Rata Imunda!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #457b9d;
+            --accent-color: #a8dadc;
+            --dark-color: #1d3557;
+            --light-color: #f1faee;
+            --correct-color: #2a9d8f;
+            --incorrect-color: #e63946;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: linear-gradient(-45deg, #ffc8dd, #ffafcc, #bde0fe, #a2d2ff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                var(--primary-color), 
+                var(--secondary-color), 
+                var(--accent-color), 
+                var(--primary-color));
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientBorder 8s ease infinite;
+            border-radius: 25px;
+            opacity: 0.5;
+            filter: blur(15px);
+        }
+
+        @keyframes gradientBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+        .enigma-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--accent-color);
+        }
+
+        .enigma-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+
+        h2, h3, h4 {
+            color: var(--secondary-color);
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 40%;
+            width: 20%;
+            height: 2px;
+            background: var(--accent-color);
+        }
+
+        .pistas {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .pistas h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .pistas h3::before {
+            content: "🔍";
+            margin-right: 10px;
+        }
+
+        .pistas ol {
+            padding-left: 1.8rem;
+        }
+
+        .pistas li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .pistas li::before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .solucao {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .solucao h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .solucao h3::before {
+            content: "🧩";
+            margin-right: 10px;
+        }
+
+        .crianca {
+            background-color: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .crianca:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .crianca h4 {
+            margin: 0;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .crianca h4::before {
+            content: "👦";
+            margin-right: 8px;
+        }
+
+        #ana h4::before { content: "👧"; }
+        #tiago h4::before { content: "👦"; }
+        #sofia h4::before { content: "👧"; }
+
+        .select-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            flex-grow: 1;
+        }
+
+        select {
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin-right: 1rem;
+            background-color: white;
+            font-family: 'Roboto', sans-serif;
+            min-width: 200px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(168, 218, 220, 0.5);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: #d62839;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: all 0.3s;
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        #feedback {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-weight: bold;
+            min-height: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .correct {
+            background-color: rgba(42, 157, 143, 0.2);
+            color: var(--correct-color);
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .incorrect {
+            background-color: rgba(230, 57, 70, 0.2);
+            color: var(--incorrect-color);
+            display: block;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-objects {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-object {
+            position: absolute;
+            opacity: 0.6;
+            animation: floatAround 15s infinite linear;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(90deg); }
+            50% { transform: translate(100px, 0) rotate(180deg); }
+            75% { transform: translate(50px, -50px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .enigma-container, .pistas, .solucao {
+                padding: 1rem;
+            }
+            
+            .crianca {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .select-group {
+                width: 100%;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            select {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            button {
+                width: 100%;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-objects">
+        <div class="floating-object">🎈</div>
+        <div class="floating-object">🎁</div>
+        <div class="floating-object">🎂</div>
+        <div class="floating-object">🎊</div>
+    </div>
+    
+    <div class="container">
+        <h1>Feliz Aniversário, Rata Imunda! 🎉</h1>
+        
+        <div class="enigma-container">
+            <h2>Enigma das Mochilas</h2>
+            <p style="text-align: center; margin-bottom: 1.5rem;">Descubra qual criança carrega qual mochila e qual item baseado nas pistas:</p>
+            
+            <div class="pistas">
+                <h3>Pistas:</h3>
+                <ol>
+                    <li>Cada criança tem uma mochila de cor diferente (vermelho, verde, azul, amarelo) e um item único.</li>
+                    <li>Lucas não gosta de coisas verdes e nunca desenha.</li>
+                    <li>Ana sempre leva comida na mochila.</li>
+                    <li>A mochila azul contém o caderno de desenhos.</li>
+                    <li>Tiago adora arte e criatividade.</li>
+                    <li>A mochila vermelha pertence a alguém que gosta de história.</li>
+                    <li>Sofia é a mais nova e leva sempre seu brinquedo favorito.</li>
+                </ol>
+            </div>
+            
+            <div class="solucao">
+                <h3>Selecione as combinações corretas:</h3>
+                
+                <div class="crianca" id="lucas">
+                    <h4>Lucas</h4>
+                    <div class="select-group">
+                        <select class="mochila">
+                            <option value="">Selecione a mochila</option>
+                            <option value="vermelha">Vermelha</option>
+                            <option value="verde">Verde</option>
+                            <option value="azul">Azul</option>
+                            <option value="amarela">Amarela</option>
+                        </select>
+                        <select class="item">
+                            <option value="">Selecione o item</option>
+                            <option value="livro">Livro de dinossauros</option>
+                            <option value="sanduiche">Sanduíche</option>
+                            <option value="caderno">Caderno de desenhos</option>
+                            <option value="brinquedo">Brinquedo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="crianca" id="ana">
+                    <h4>Ana</h4>
+                    <div class="select-group">
+                        <select class="mochila">
+                            <option value="">Selecione a mochila</option>
+                            <option value="vermelha">Vermelha</option>
+                            <option value="verde">Verde</option>
+                            <option value="azul">Azul</option>
+                            <option value="amarela">Amarela</option>
+                        </select>
+                        <select class="item">
+                            <option value="">Selecione o item</option>
+                            <option value="livro">Livro de dinossauros</option>
+                            <option value="sanduiche">Sanduíche</option>
+                            <option value="caderno">Caderno de desenhos</option>
+                            <option value="brinquedo">Brinquedo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="crianca" id="tiago">
+                    <h4>Tiago</h4>
+                    <div class="select-group">
+                        <select class="mochila">
+                            <option value="">Selecione a mochila</option>
+                            <option value="vermelha">Vermelha</option>
+                            <option value="verde">Verde</option>
+                            <option value="azul">Azul</option>
+                            <option value="amarela">Amarela</option>
+                        </select>
+                        <select class="item">
+                            <option value="">Selecione o item</option>
+                            <option value="livro">Livro de dinossauros</option>
+                            <option value="sanduiche">Sanduíche</option>
+                            <option value="caderno">Caderno de desenhos</option>
+                            <option value="brinquedo">Brinquedo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="crianca" id="sofia">
+                    <h4>Sofia</h4>
+                    <div class="select-group">
+                        <select class="mochila">
+                            <option value="">Selecione a mochila</option>
+                            <option value="vermelha">Vermelha</option>
+                            <option value="verde">Verde</option>
+                            <option value="azul">Azul</option>
+                            <option value="amarela">Amarela</option>
+                        </select>
+                        <select class="item">
+                            <option value="">Selecione o item</option>
+                            <option value="livro">Livro de dinossauros</option>
+                            <option value="sanduiche">Sanduíche</option>
+                            <option value="caderno">Caderno de desenhos</option>
+                            <option value="brinquedo">Brinquedo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="verificar" disabled>Verificar Respostas</button>
+                <p id="feedback"></p>
+            </div>
+        </div>
+    </div>
+    
+    <canvas id="confetti-canvas"></canvas>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efeito de confete contínuo
+            function fireConfetti() {
+                confetti({
+                    particleCount: 50,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+                });
+                
+                setTimeout(fireConfetti, 3000);
+            }
+            
+            fireConfetti();
+            
+            // Verificar respostas
+            const verificarBtn = document.getElementById('verificar');
+            const feedback = document.getElementById('feedback');
+            
+            // Solução correta
+            const solucaoCorreta = {
+                lucas: { mochila: 'vermelha', item: 'livro' },
+                ana: { mochila: 'verde', item: 'sanduiche' },
+                tiago: { mochila: 'azul', item: 'caderno' },
+                sofia: { mochila: 'amarela', item: 'brinquedo' }
+            };
+            
+            // Habilitar botão quando todas as seleções estiverem feitas
+            function verificarSelecoes() {
+                const todasSelecionadas = Array.from(document.querySelectorAll('.crianca')).every(crianca => {
+                    const mochila = crianca.querySelector('.mochila').value;
+                    const item = crianca.querySelector('.item').value;
+                    return mochila && item;
+                });
+                
+                verificarBtn.disabled = !todasSelecionadas;
+            }
+            
+            // Adicionar event listeners para os selects
+            document.querySelectorAll('select').forEach(select => {
+                select.addEventListener('change', verificarSelecoes);
+            });
+            
+            // Verificar respostas quando o botão for clicado
+            verificarBtn.addEventListener('click', function() {
+                let todasCorretas = true;
+                let respostasCorretas = 0;
+                
+                for (const [criancaId, solucao] of Object.entries(solucaoCorreta)) {
+                    const divCrianca = document.getElementById(criancaId);
+                    const mochilaSelecionada = divCrianca.querySelector('.mochila').value;
+                    const itemSelecionado = divCrianca.querySelector('.item').value;
+                    
+                    if (mochilaSelecionada === solucao.mochila && itemSelecionado === solucao.item) {
+                        divCrianca.style.borderLeftColor = '#2a9d8f';
+                        respostasCorretas++;
+                    } else {
+                        divCrianca.style.borderLeftColor = '#e63946';
+                        todasCorretas = false;
+                    }
+                }
+                
+                if (todasCorretas) {
+                    feedback.textContent = `Parabéns! Todas as ${respostasCorretas} respostas estão corretas! 🎉`;
+                    feedback.className = 'correct';
+                    
+                    // Disparar mais confetes
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            confetti({
+                                particleCount: 150,
+                                spread: 100,
+                                origin: { y: 0.6 }
+                            });
+                        }, i * 300);
+                    }
+                    
+                    // Abrir dica.html em nova aba após 2 segundos
+                    setTimeout(() => {
+                        window.open('dica.html', '_blank');
+                    }, 2000);
+                } else {
+                    feedback.textContent = `Você acertou ${respostasCorretas} de 4. Tente novamente!`;
+                    feedback.className = 'incorrect';
+                }
+                
+                feedback.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
